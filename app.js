@@ -38,7 +38,8 @@ const addTask = function () {
   if (!taskInput.value) return;
   const listItem = createNewTaskElement(taskInput.value);
 
-  moveTask(listItem, incompleteTaskHolder, moveTaskToCompleted);
+  bindTaskEvents(listItem);
+  moveTask(listItem, incompleteTaskHolder);
 
   taskInput.value = '';
 };
@@ -64,44 +65,42 @@ const deleteTask = function (listItem) {
   listItem.parentNode.removeChild(listItem);
 };
 
-const moveTask = function (listItem, targetHolder, nextHandler) {
+const moveTask = function (listItem, targetHolder) {
   targetHolder.appendChild(listItem);
-  bindTaskEvents(listItem, nextHandler);
 };
 
-const moveTaskToCompleted = function (listItem) {
-  moveTask(listItem, completedTasksHolder, moveTaskToIncompleted);
-};
+const toggleTaskState = function (listItem) {
+  const checkBox = listItem.querySelector('input[type=checkbox]');
+  const targetHolder = checkBox.checked ? completedTasksHolder : incompleteTaskHolder;
 
-const moveTaskToIncompleted = function (listItem) {
-  moveTask(listItem, incompleteTaskHolder, moveTaskToCompleted);
+  moveTask(listItem, targetHolder);
 };
 
 addButton.addEventListener('click', addTask);
 
-const bindTaskEvents = function (taskListItem, checkBoxEventHandler) {
+const bindTaskEvents = function (taskListItem) {
   const checkBox = taskListItem.querySelector('input[type=checkbox]');
   const editButton = taskListItem.querySelector(`button.${TASK_CLASS.EDIT}`);
   const deleteButton = taskListItem.querySelector(`button.${TASK_CLASS.DELETE}`);
 
-  editButton.onclick = function () {
+  editButton.addEventListener('click', function () {
     editTask(taskListItem);
-  };
+  });
 
-  deleteButton.onclick = function () {
+  deleteButton.addEventListener('click', function () {
     deleteTask(taskListItem);
-  };
+  });
 
-  checkBox.onchange = function () {
-    checkBoxEventHandler(taskListItem);
-  };
+  checkBox.addEventListener('change', function () {
+    toggleTaskState(taskListItem);
+  });
 };
 
-const bindAllTasks = function (taskList, checkBoxEventHandler) {
+const bindAllTasks = function (taskList) {
   for (let i = 0; i < taskList.children.length; i++) {
-    bindTaskEvents(taskList.children[i], checkBoxEventHandler);
+    bindTaskEvents(taskList.children[i]);
   }
 };
 
-bindAllTasks(incompleteTaskHolder, moveTaskToCompleted);
-bindAllTasks(completedTasksHolder, moveTaskToIncompleted);
+bindAllTasks(incompleteTaskHolder);
+bindAllTasks(completedTasksHolder);
