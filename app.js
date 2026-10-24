@@ -3,39 +3,24 @@ const addButton = document.getElementsByTagName('button')[0];
 const incompleteTaskHolder = document.getElementById('incompleteTasks');
 const completedTasksHolder = document.getElementById('completed-tasks');
 
+const createTaskElement = function (tag, properties) {
+  const element = document.createElement(tag);
+  Object.assign(element, properties);
+  return element;
+};
+
 const createNewTaskElement = function (taskString) {
+  const checkBox = createTaskElement('input', { type: 'checkbox' });
+  const label = createTaskElement('label', { className: 'task', innerText: taskString });
+  const editInput = createTaskElement('input', { type: 'text', className: 'task' });
+  const editButton = createTaskElement('button', { className: 'edit', innerText: 'Edit' });
+  const deleteButton = createTaskElement('button', { className: 'delete' });
+  deleteButton.appendChild(createTaskElement('img', { src: './remove.svg' }));
+
   const listItem = document.createElement('li');
-
-  const checkBox = document.createElement('input');
-
-  const label = document.createElement('label');
-
-  const editInput = document.createElement('input');
-
-  const editButton = document.createElement('button');
-
-  const deleteButton = document.createElement('button');
-  const deleteButtonImg = document.createElement('img');
-
-  label.innerText = taskString;
-  label.className = 'task';
-
-  checkBox.type = 'checkbox';
-  editInput.type = 'text';
-  editInput.className = 'task';
-
-  editButton.innerText = 'Edit';
-  editButton.className = 'edit';
-
-  deleteButton.className = 'delete';
-  deleteButtonImg.src = './remove.svg';
-  deleteButton.appendChild(deleteButtonImg);
-
-  listItem.appendChild(checkBox);
-  listItem.appendChild(label);
-  listItem.appendChild(editInput);
-  listItem.appendChild(editButton);
-  listItem.appendChild(deleteButton);
+  [checkBox, label, editInput, editButton, deleteButton].forEach(function (element) {
+    listItem.appendChild(element);
+  });
   return listItem;
 };
 
@@ -48,9 +33,7 @@ const addTask = function () {
   taskInput.value = '';
 };
 
-const editTask = function () {
-  const listItem = this.parentNode;
-
+const editTask = function (listItem) {
   const editInput = listItem.querySelector('input[type=text]');
   const label = listItem.querySelector('label');
   const editBtn = listItem.querySelector('.edit');
@@ -67,11 +50,8 @@ const editTask = function () {
   listItem.classList.toggle('editMode');
 };
 
-const deleteTask = function () {
-  const listItem = this.parentNode;
-  const ul = listItem.parentNode;
-
-  ul.removeChild(listItem);
+const deleteTask = function (listItem) {
+  listItem.parentNode.removeChild(listItem);
 };
 
 const moveTask = function (listItem, targetHolder, nextHandler) {
@@ -79,12 +59,12 @@ const moveTask = function (listItem, targetHolder, nextHandler) {
   bindTaskEvents(listItem, nextHandler);
 };
 
-const moveTaskToCompleted = function () {
-  moveTask(this.parentNode, completedTasksHolder, moveTaskToIncompleted);
+const moveTaskToCompleted = function (listItem) {
+  moveTask(listItem, completedTasksHolder, moveTaskToIncompleted);
 };
 
-const moveTaskToIncompleted = function () {
-  moveTask(this.parentNode, incompleteTaskHolder, moveTaskToCompleted);
+const moveTaskToIncompleted = function (listItem) {
+  moveTask(listItem, incompleteTaskHolder, moveTaskToCompleted);
 };
 
 addButton.addEventListener('click', addTask);
@@ -94,11 +74,17 @@ const bindTaskEvents = function (taskListItem, checkBoxEventHandler) {
   const editButton = taskListItem.querySelector('button.edit');
   const deleteButton = taskListItem.querySelector('button.delete');
 
-  editButton.onclick = editTask;
+  editButton.onclick = function () {
+    editTask(taskListItem);
+  };
 
-  deleteButton.onclick = deleteTask;
+  deleteButton.onclick = function () {
+    deleteTask(taskListItem);
+  };
 
-  checkBox.onchange = checkBoxEventHandler;
+  checkBox.onchange = function () {
+    checkBoxEventHandler(taskListItem);
+  };
 };
 
 const bindAllTasks = function (taskList, checkBoxEventHandler) {
