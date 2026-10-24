@@ -80,10 +80,10 @@ const moveTask = function (listItem, targetHolder, nextHandler) {
 };
 
 const moveTaskToCompleted = function () {
-  moveTask(this.parentNode, completedTasksHolder, taskIncomplete);
+  moveTask(this.parentNode, completedTasksHolder, moveTaskToIncompleted);
 };
 
-const taskIncomplete = function () {
+const moveTaskToIncompleted = function () {
   moveTask(this.parentNode, incompleteTaskHolder, moveTaskToCompleted);
 };
 
@@ -106,5 +106,5 @@ for (let i = 0; i < incompleteTaskHolder.children.length; i++) {
 }
 
 for (let i = 0; i < completedTasksHolder.children.length; i++) {
-  bindTaskEvents(completedTasksHolder.children[i], taskIncomplete);
+  bindTaskEvents(completedTasksHolder.children[i], moveTaskToIncompleted);
 }
