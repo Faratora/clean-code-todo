@@ -62,9 +62,10 @@ const createNewTaskElement = function (taskString) {
 };
 
 const addTask = function () {
-  if (!taskInput.value) return;
+  const trimmedValue = taskInput.value.trim();
+  if (!trimmedValue) return;
 
-  const listItem = createNewTaskElement(taskInput.value);
+  const listItem = createNewTaskElement(trimmedValue);
 
   bindTaskEvents(listItem);
   moveTask(listItem, incompleteTaskHolder);
