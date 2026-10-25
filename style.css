@@ -19,8 +19,10 @@ body {
 
 .sr-only {
   position: absolute;
-  width: 1px; height: 1px;
-  padding: 0; margin: -1px;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
   overflow: hidden;
   clip: rect(0 0 0 0);
   white-space: nowrap;
@@ -121,18 +123,18 @@ button {
   align-items: center;
 }
 
-.todo__item>input[type="checkbox"] {
+.todo__item > input[type='checkbox'] {
   margin: 0 10px;
 }
 
-.todo__item>.todo__label,
-.todo__item>.todo__input {
+.todo__item > .todo__label,
+.todo__item > .todo__input {
   flex: 1;
   min-width: 0;
   font-size: 18px;
 }
 
-.todo__item>.todo__label {
+.todo__item > .todo__label {
   padding-left: 10px;
   box-sizing: border-box;
 }
@@ -152,14 +154,14 @@ button {
   color: var(--color-text-muted);
 }
 
-.todo__item>.todo__input {
+.todo__item > .todo__input {
   display: none;
 }
 
-.todo__item--editing>.todo__input {
+.todo__item--editing > .todo__input {
   display: inline-block;
 }
 
-.todo__item--editing>.todo__label {
+.todo__item--editing > .todo__label {
   display: none;
 }
